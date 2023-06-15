@@ -14,9 +14,9 @@ def get_product_list(page, campaign_id, access_token):
     """Получить список товаров из нашего магазина в Yandex.Market.
 
     Attributes:
-        page(str): Идентификатор страницы выдачи API, которую нужно открыть.
-        campaign_id(str): Идентификатор магазина для API Yandex.Market.
-        access_token(str): Токен доступа к API для Yandex.Market.
+        page (str): Идентификатор страницы выдачи API, которую нужно открыть.
+        campaign_id (str): Идентификатор магазина для API Yandex.Market.
+        access_token (str): Токен доступа к API для Yandex.Market.
 
     Returns:
         dict: Часть ответа API, содержащая список товаров.
@@ -52,9 +52,9 @@ def update_stocks(stocks, campaign_id, access_token):
     """Обновить данные товаров нашего интернет-магазина.
 
     Attributes:
-        stocks(list): Список товаров с обновлёнными данными.
-        campaign_id(str): Идентификатор магазина для API Yandex.Market.
-        access_token(str): Токен доступа к API для Yandex.Market.
+        stocks (list): Список товаров с обновлёнными данными.
+        campaign_id (str): Идентификатор магазина для API Yandex.Market.
+        access_token (str): Токен доступа к API для Yandex.Market.
 
     Returns:
         dict: Ответ API
@@ -89,9 +89,9 @@ def update_price(prices, campaign_id, access_token):
     """Обновить цены товаров нашего интернет-магазина.
 
     Attributes:
-        prices(list): Список товаров с обновлёнными данными.
-        campaign_id(str): Идентификатор магазина для API Yandex.Market.
-        access_token(str): Токен доступа к API для Yandex.Market.
+        prices (list): Список товаров с обновлёнными данными.
+        campaign_id (str): Идентификатор магазина для API Yandex.Market.
+        access_token (str): Токен доступа к API для Yandex.Market.
 
     Returns:
         dict: Ответ API
@@ -126,8 +126,8 @@ def get_offer_ids(campaign_id, market_token):
     """Получить артикулы товаров Яндекс маркета
 
     Attributes:
-        campaign_id(str): Идентификатор магазина для API Yandex.Market.
-        market_token(str): Токен доступа к API для Yandex.Market.
+        campaign_id (str): Идентификатор магазина для API Yandex.Market.
+        market_token (str): Токен доступа к API для Yandex.Market.
 
     Returns:
         list: Список артикулов товаров нашего магазина.
@@ -159,9 +159,9 @@ def create_stocks(watch_remnants, offer_ids, warehouse_id):
     """Подготовить данные товаров для загрузки в магазин Yandex.Market
 
     Arguments:
-        watch_remnants(dict): Словарь с данными о товарах.
-        offer_ids(list): Список имеющихся в магазине товаров.
-        warehouse_id(str): Идентификатор склада для API Yandex.Market
+        watch_remnants (dict): Словарь с данными о товарах.
+        offer_ids (list): Список имеющихся в магазине товаров.
+        warehouse_id (str): Идентификатор склада для API Yandex.Market
 
     Returns:
         list: Список обновлённых данных о товарах для магазина Yandex.Market.
@@ -224,8 +224,8 @@ def create_prices(watch_remnants, offer_ids):
     """Обновить цены для товаров.
 
     Arguments:
-        watch_remnants(dict): Словарь с данными о товарах.
-        offer_ids(list): Список имеющихся в магазине товаров.
+        watch_remnants (dict): Словарь с данными о товарах.
+        offer_ids (list): Список имеющихся в магазине товаров.
 
     Returns:
         list: Список товаров с обновлёнными ценами.
@@ -260,9 +260,9 @@ async def upload_prices(watch_remnants, campaign_id, market_token):
     """Загрузить новые цены товаров в магазин Yandex.Market.
 
     Arguments:
-        watch_remnants(dict): Словарь с данными о товарах.
-        campaign_id(str): Идентификатор клиента, сгенерированный для доступа к API Yandex.Market.
-        market_token(str): Токен, сгенерированный для доступа к API Yandex.Market.
+        watch_remnants (dict): Словарь с данными о товарах.
+        campaign_id (str): Идентификатор клиента, сгенерированный для доступа к API Yandex.Market.
+        market_token (str): Токен, сгенерированный для доступа к API Yandex.Market.
 
     Returns:
         list: Цены, которые были загружены.
@@ -285,10 +285,10 @@ async def upload_stocks(watch_remnants, campaign_id, market_token, warehouse_id)
     """Обновить данные товарах в магазине Yandex.Market.
 
     Arguments:
-        watch_remnants(dict): Словарь с данными о товарах.
-        campaign_id(str): Идентификатор клиента, сгенерированный для доступа к API Yandex.Market.
-        market_token(str): Токен, сгенерированный для доступа к API Yandex.Market.
-        warehouse_id(str): Идентификатор склада для API Yandex.Market.
+        watch_remnants (dict): Словарь с данными о товарах.
+        campaign_id (str): Идентификатор клиента, сгенерированный для доступа к API Yandex.Market.
+        market_token (str): Токен, сгенерированный для доступа к API Yandex.Market.
+        warehouse_id (str): Идентификатор склада для API Yandex.Market.
 
     Returns:
         list: Список товаров, которые ещё остались в продаже.
