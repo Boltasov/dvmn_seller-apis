@@ -11,6 +11,25 @@ logger = logging.getLogger(__file__)
 
 
 def get_product_list(page, campaign_id, access_token):
+    """Получить список товаров из нашего магазина в Yandex.Market.
+
+    Attributes:
+        page(str): Идентификатор страницы выдачи API, которую нужно открыть.
+        campaign_id(str): Идентификатор магазина для API Yandex.Market.
+        access_token(str): Токен доступа к API для Yandex.Market.
+
+    Returns:
+        dict: Часть ответа API, содержащая список товаров.
+
+    Examples:
+        >>> env = Env()
+        >>> get_product_list("", env.str("FBS_ID"), env.str("MARKET_TOKEN"))
+        [...]
+
+    Raises:
+        requests.exceptions.HTTPError: Если campaign_id и access_token не указаны или не актуальны.
+    """
+
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -30,6 +49,27 @@ def get_product_list(page, campaign_id, access_token):
 
 
 def update_stocks(stocks, campaign_id, access_token):
+    """Обновить данные товаров нашего интернет-магазина.
+
+    Attributes:
+        stocks(list): Список товаров с обновлёнными данными.
+        campaign_id(str): Идентификатор магазина для API Yandex.Market.
+        access_token(str): Токен доступа к API для Yandex.Market.
+
+    Returns:
+        dict: Ответ API
+
+    Examples:
+        >>> env = Env()
+        >>> stocks = create_stocks(watch_remnants, offer_ids, warehouse_fbs_id)
+        >>> some_stock = list(divide(stocks, 2000))[0]
+        >>> update_stocks(some_stock, env.str("FBS_ID"), env.str("MARKET_TOKEN"))
+        [...]
+
+    Raises:
+        requests.exceptions.HTTPError: Если campaign_id и access_token не указаны или не актуальны.
+    """
+
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -46,6 +86,27 @@ def update_stocks(stocks, campaign_id, access_token):
 
 
 def update_price(prices, campaign_id, access_token):
+    """Обновить цены товаров нашего интернет-магазина.
+
+    Attributes:
+        prices(list): Список товаров с обновлёнными данными.
+        campaign_id(str): Идентификатор магазина для API Yandex.Market.
+        access_token(str): Токен доступа к API для Yandex.Market.
+
+    Returns:
+        dict: Ответ API
+
+    Examples:
+        >>> env = Env()
+        >>> prices = create_prices(watch_remnants, offer_ids)
+        >>> some_prices = list(divide(prices, 500))[0]
+        >>> update_price(some_prices, env.str("FBS_ID"), env.str("MARKET_TOKEN"))
+        [...]
+
+    Raises:
+        requests.exceptions.HTTPError: Если campaign_id и access_token не указаны или не актуальны.
+    """
+
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -62,7 +123,24 @@ def update_price(prices, campaign_id, access_token):
 
 
 def get_offer_ids(campaign_id, market_token):
-    """Получить артикулы товаров Яндекс маркета"""
+    """Получить артикулы товаров Яндекс маркета
+
+    Attributes:
+        campaign_id(str): Идентификатор магазина для API Yandex.Market.
+        market_token(str): Токен доступа к API для Yandex.Market.
+
+    Returns:
+        list: Список артикулов товаров нашего магазина.
+
+    Examples:
+        >>> env = Env()
+        >>> get_offer_ids(env.str("FBS_ID"), env.str("MARKET_TOKEN"))
+        [...]
+
+    Raises:
+        requests.exceptions.HTTPError: Если campaign_id и access_token не указаны или не актуальны.
+    """
+
     page = ""
     product_list = []
     while True:
@@ -78,6 +156,26 @@ def get_offer_ids(campaign_id, market_token):
 
 
 def create_stocks(watch_remnants, offer_ids, warehouse_id):
+    """Подготовить данные товаров для загрузки в магазин Yandex.Market
+
+    Arguments:
+        watch_remnants(dict): Словарь с данными о товарах.
+        offer_ids(list): Список имеющихся в магазине товаров.
+        warehouse_id(str): Идентификатор склада для API Yandex.Market
+
+    Returns:
+        list: Список обновлённых данных о товарах для магазина Yandex.Market.
+
+    Examples:
+        >>> offer_ids = get_offer_ids(campaign_id, market_token)
+        >>> watch_remnants = download_stock()
+        >>> create_stocks(watch_remnants, offer_ids, warehouse_id)
+        [...]
+
+    Raises:
+        requests.exceptions.HTTPError: Если campaign_id, access_token или warehouse_id не указаны или не актуальны.
+    """
+
     # Уберем то, что не загружено в market
     stocks = list()
     date = str(datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z")
@@ -123,6 +221,22 @@ def create_stocks(watch_remnants, offer_ids, warehouse_id):
 
 
 def create_prices(watch_remnants, offer_ids):
+    """Обновить цены для товаров.
+
+    Arguments:
+        watch_remnants(dict): Словарь с данными о товарах.
+        offer_ids(list): Список имеющихся в магазине товаров.
+
+    Returns:
+        list: Список товаров с обновлёнными ценами.
+
+    Examples:
+        >>> offer_ids = get_offer_ids(campaign_id, market_token)
+        >>> watch_remnants = download_stock()
+        >>> create_prices(watch_remnants, offer_ids)
+        [...]
+    """
+
     prices = []
     for watch in watch_remnants:
         if str(watch.get("Код")) in offer_ids:
@@ -143,6 +257,23 @@ def create_prices(watch_remnants, offer_ids):
 
 
 async def upload_prices(watch_remnants, campaign_id, market_token):
+    """Загрузить новые цены товаров в магазин Yandex.Market.
+
+    Arguments:
+        watch_remnants(dict): Словарь с данными о товарах.
+        campaign_id(str): Идентификатор клиента, сгенерированный для доступа к API Yandex.Market.
+        market_token(str): Токен, сгенерированный для доступа к API Yandex.Market.
+
+    Returns:
+        list: Цены, которые были загружены.
+
+    Examples:
+        >>> env = Env()
+        >>> watch_remnants = download_stock()
+        >>> upload_prices(watch_remnants, env.str("FBS_ID"), env.str("MARKET_TOKEN"))
+        [...]
+    """
+
     offer_ids = get_offer_ids(campaign_id, market_token)
     prices = create_prices(watch_remnants, offer_ids)
     for some_prices in list(divide(prices, 500)):
@@ -151,6 +282,25 @@ async def upload_prices(watch_remnants, campaign_id, market_token):
 
 
 async def upload_stocks(watch_remnants, campaign_id, market_token, warehouse_id):
+    """Обновить данные товарах в магазине Yandex.Market.
+
+    Arguments:
+        watch_remnants(dict): Словарь с данными о товарах.
+        campaign_id(str): Идентификатор клиента, сгенерированный для доступа к API Yandex.Market.
+        market_token(str): Токен, сгенерированный для доступа к API Yandex.Market.
+        warehouse_id(str): Идентификатор склада для API Yandex.Market.
+
+    Returns:
+        list: Список товаров, которые ещё остались в продаже.
+        list: Список данных о товарах, которые были обновлены.
+
+    Examples:
+        >>> env = Env()
+        >>> watch_remnants = download_stock()
+        >>> upload_stocks(watch_remnants, env.str("FBS_ID"), env.str("MARKET_TOKEN"))
+        [...]
+    """
+
     offer_ids = get_offer_ids(campaign_id, market_token)
     stocks = create_stocks(watch_remnants, offer_ids, warehouse_id)
     for some_stock in list(divide(stocks, 2000)):
@@ -162,6 +312,12 @@ async def upload_stocks(watch_remnants, campaign_id, market_token, warehouse_id)
 
 
 def main():
+    """Загружает информацию о товарах с сайта Casio и обновляет данные товаров для магазинов FBS и DBS в Yandex.Market
+
+    Raises:
+        requests.exceptions.ReadTimeout
+        requests.exceptions.ConnectionError
+    """
     env = Env()
     market_token = env.str("MARKET_TOKEN")
     campaign_fbs_id = env.str("FBS_ID")
