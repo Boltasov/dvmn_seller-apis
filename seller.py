@@ -17,7 +17,7 @@ def get_product_list(last_id, client_id, seller_token):
     Arguments:
         last_id (str): Идентификатор последнего товара, полученного в ответе API Ozon.
         client_id (str): Идентификатор клиента, сгенерированный для доступа к API Ozon.
-        seller_token (str): Токен, сгенерированный для доступа к API Ozon.
+         (str): Токен, сгенерированный для доступа к API Ozon.
 
     Returns:
         dict: Содержимое ответа API со списком товаров.
@@ -186,8 +186,8 @@ def create_stocks(watch_remnants, offer_ids):
     """Подготовить данные товаров для загрузки в магазин Ozon
 
     Arguments:
-        watch_remnants(dict): Словарь с данными о товарах.
-        offer_ids(list): Список имеющихся в магазине товаров.
+        watch_remnants (dict): Словарь с данными о товарах.
+        offer_ids (list): Список имеющихся в магазине товаров.
 
     Returns:
         list: Список обновлённых данных о товарах для магазина Ozon.
@@ -225,8 +225,8 @@ def create_prices(watch_remnants, offer_ids):
     """Обновить цены для товаров.
 
     Arguments:
-        watch_remnants(dict): Словарь с данными о товарах.
-        offer_ids(list): Список имеющихся в магазине товаров.
+        watch_remnants (dict): Словарь с данными о товарах.
+        offer_ids (list): Список имеющихся в магазине товаров.
 
     Returns:
         list: Список товаров с обновлёнными ценами.
@@ -302,7 +302,7 @@ async def upload_prices(watch_remnants, client_id, seller_token):
     """Загрузить новые цены товаров в магазин Ozon.
 
     Arguments:
-        watch_remnants(dict): Словарь с данными о товарах.
+        watch_remnants (dict): Словарь с данными о товарах.
         client_id (str): Идентификатор клиента, сгенерированный для доступа к API Ozon.
         seller_token (str): Токен, сгенерированный для доступа к API Ozon.
 
@@ -315,6 +315,7 @@ async def upload_prices(watch_remnants, client_id, seller_token):
         >>> upload_prices(watch_remnants, env.str("CLIENT_ID"), env.str("SELLER_TOKEN"))
         [...]
     """
+
     offer_ids = get_offer_ids(client_id, seller_token)
     prices = create_prices(watch_remnants, offer_ids)
     for some_price in list(divide(prices, 1000)):
@@ -326,7 +327,7 @@ async def upload_stocks(watch_remnants, client_id, seller_token):
     """Обновить данные товарах в магазине Ozon.
 
         Arguments:
-            watch_remnants(dict): Словарь с данными о товарах.
+            watch_remnants (dict): Словарь с данными о товарах.
             client_id (str): Идентификатор клиента, сгенерированный для доступа к API Ozon.
             seller_token (str): Токен, сгенерированный для доступа к API Ozon.
 
@@ -349,6 +350,12 @@ async def upload_stocks(watch_remnants, client_id, seller_token):
 
 
 def main():
+    """Загружает информацию о товарах с сайта Casio и обновляет данные товаров для магазина в Ozon
+
+    Raises:
+        requests.exceptions.ReadTimeout
+        requests.exceptions.ConnectionError
+    """
     env = Env()
     seller_token = env.str("SELLER_TOKEN")
     client_id = env.str("CLIENT_ID")
