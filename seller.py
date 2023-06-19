@@ -31,7 +31,7 @@ def get_product_list(last_id, client_id, seller_token):
         [...]
 
     Raises:
-        requests.exceptions.HTTPError: Если CLIENT_ID и SELLER_TOKEN не указаны или не актуальны.
+        requests.exceptions.HTTPError
     """
 
     url = "https://api-seller.ozon.ru/v2/product/list"
@@ -68,7 +68,7 @@ def get_offer_ids(client_id, seller_token):
         [...]
 
     Raises:
-        requests.exceptions.HTTPError: Если CLIENT_ID и SELLER_TOKEN не указаны или не актуальны.
+        requests.exceptions.HTTPError
     """
 
     last_id = ""
@@ -90,7 +90,7 @@ def update_price(prices: list, client_id, seller_token):
     """Обновить цены товаров в магазине.
 
     Arguments:
-        prices: Список словарей, содержащих данные об артикуле и его цене.
+        prices (list): Список словарей, содержащих данные об артикуле и его цене.
         client_id (str): Идентификатор клиента, сгенерированный для доступа к API Ozon.
         seller_token (str): Токен, сгенерированный для доступа к API Ozon.
 
@@ -105,7 +105,7 @@ def update_price(prices: list, client_id, seller_token):
         {...}
 
     Raises:
-        requests.exceptions.HTTPError: Если CLIENT_ID и SELLER_TOKEN не указаны или не актуальны.
+        requests.exceptions.HTTPError
 
     """
 
@@ -124,7 +124,7 @@ def update_stocks(stocks: list, client_id, seller_token):
     """Обновить информацию о товарах на основе данных об остатках.
 
     Arguments:
-        stocks: Данные об остатках товаров.
+        stocks (list): Данные об остатках товаров.
         client_id (str): Идентификатор клиента, сгенерированный для доступа к API Ozon.
         seller_token (str): Токен, сгенерированный для доступа к API Ozon.
 
@@ -138,7 +138,7 @@ def update_stocks(stocks: list, client_id, seller_token):
         {...}
 
     Raises:
-        requests.exceptions.HTTPError: Если CLIENT_ID и SELLER_TOKEN не указаны или не актуальны.
+        requests.exceptions.HTTPError
     """
 
     url = "https://api-seller.ozon.ru/v1/product/import/stocks"
@@ -199,7 +199,7 @@ def create_stocks(watch_remnants, offer_ids):
         []
 
     Raises:
-        requests.exceptions.HTTPError: Если CLIENT_ID и SELLER_TOKEN не указаны или не актуальны.
+        requests.exceptions.HTTPError
     """
 
     # Уберем то, что не загружено в seller
@@ -256,10 +256,10 @@ def price_conversion(price: str) -> str:
     """Преобразовать строку цены с дополнительными символами в строку с целой частью цены.
 
     Args:
-        price: Строка, содержащая цену на товар.
+        price (str): Строка, содержащая цену на товар.
 
     Returns:
-        Возвращает строку из цифр, обозначающую целочисленное значение введённой цены.
+        str: Возвращает строку из цифр, обозначающую целочисленное значение введённой цены.
 
     Examples:
         Корректное использование функции.
@@ -280,8 +280,8 @@ def divide(lst: list, n: int):
     """Разделить список lst на части по n элементов
 
     Arguments:
-        lst: Список, который нужно разделить на части
-        n: Количество частей, на которые нужно разделить список
+        lst (list): Список, который нужно разделить на части
+        n (int): Количество частей, на которые нужно разделить список
 
     Yields:
         list: N-я часть списка

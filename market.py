@@ -104,7 +104,7 @@ def update_price(prices, campaign_id, access_token):
         [...]
 
     Raises:
-        requests.exceptions.HTTPError: Если campaign_id и access_token не указаны или не актуальны.
+        requests.exceptions.HTTPError
     """
 
     endpoint_url = "https://api.partner.market.yandex.ru/"
@@ -138,7 +138,7 @@ def get_offer_ids(campaign_id, market_token):
         [...]
 
     Raises:
-        requests.exceptions.HTTPError: Если campaign_id и access_token не указаны или не актуальны.
+        requests.exceptions.HTTPError
     """
 
     page = ""
@@ -173,7 +173,7 @@ def create_stocks(watch_remnants, offer_ids, warehouse_id):
         [...]
 
     Raises:
-        requests.exceptions.HTTPError: Если campaign_id, access_token или warehouse_id не указаны или не актуальны.
+        requests.exceptions.HTTPError
     """
 
     # Уберем то, что не загружено в market
