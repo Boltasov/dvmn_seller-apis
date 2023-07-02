@@ -20,14 +20,6 @@ def get_product_list(page, campaign_id, access_token):
 
     Returns:
         dict: Часть ответа API, содержащая список товаров.
-
-    Examples:
-        >>> env = Env()
-        >>> get_product_list("", env.str("FBS_ID"), env.str("MARKET_TOKEN"))
-        [...]
-
-    Raises:
-        requests.exceptions.HTTPError: Если campaign_id и access_token не указаны или не актуальны.
     """
 
     endpoint_url = "https://api.partner.market.yandex.ru/"
@@ -61,13 +53,23 @@ def update_stocks(stocks, campaign_id, access_token):
 
     Examples:
         >>> env = Env()
-        >>> stocks = create_stocks(watch_remnants, offer_ids, warehouse_fbs_id)
-        >>> some_stock = list(divide(stocks, 2000))[0]
-        >>> update_stocks(some_stock, env.str("FBS_ID"), env.str("MARKET_TOKEN"))
-        [...]
+        >>> stocks = [{
+        ...     "sku": 48852,
+        ...     "warehouseId": 1234567,
+        ...     "items": [
+        ...         {
+        ...             "count": 3,
+        ...             "type": "FIT",
+        ...             "updatedAt": str(datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"),
+        ...         }
+        ...     ],
+        ... },
+        ... ...]
+        >>> update_stocks(stocks, env.str("FBS_ID"), env.str("MARKET_TOKEN"))
+        Returns response from Yandex.Market.
 
     Raises:
-        requests.exceptions.HTTPError: Если campaign_id и access_token не указаны или не актуальны.
+        requests.exceptions.HTTPError
     """
 
     endpoint_url = "https://api.partner.market.yandex.ru/"
@@ -98,10 +100,18 @@ def update_price(prices, campaign_id, access_token):
 
     Examples:
         >>> env = Env()
-        >>> prices = create_prices(watch_remnants, offer_ids)
-        >>> some_prices = list(divide(prices, 500))[0]
+        >>> some_prices = [{
+        ...                     id: 12345,
+        ...                     price{
+        ...                         value: 5990,
+        ...                         currencyId: "RUR",
+        ...                     }
+        ...                 },
+        ...                 ...
+        ...                 ]
         >>> update_price(some_prices, env.str("FBS_ID"), env.str("MARKET_TOKEN"))
-        [...]
+        Return the response described here:
+        https://yandex.com/dev/market/partner/doc/dg/reference/get-campaigns-id-offer-prices.html
 
     Raises:
         requests.exceptions.HTTPError
@@ -135,7 +145,7 @@ def get_offer_ids(campaign_id, market_token):
     Examples:
         >>> env = Env()
         >>> get_offer_ids(env.str("FBS_ID"), env.str("MARKET_TOKEN"))
-        [...]
+        [123, 345, ...]
 
     Raises:
         requests.exceptions.HTTPError
@@ -159,7 +169,7 @@ def create_stocks(watch_remnants, offer_ids, warehouse_id):
     """Подготовить данные товаров для загрузки в магазин Yandex.Market
 
     Arguments:
-        watch_remnants (dict): Словарь с данными о товарах.
+        watch_remnants (list): Список словарей с данными о товарах.
         offer_ids (list): Список имеющихся в магазине товаров.
         warehouse_id (str): Идентификатор склада для API Yandex.Market
 
@@ -167,10 +177,30 @@ def create_stocks(watch_remnants, offer_ids, warehouse_id):
         list: Список обновлённых данных о товарах для магазина Yandex.Market.
 
     Examples:
-        >>> offer_ids = get_offer_ids(campaign_id, market_token)
-        >>> watch_remnants = download_stock()
+        >>> offer_ids = [123, 345, ...]
+        >>> watch_remnants = [{
+        ...                     "Код": 48852,
+        ...                     "Наименование товара": "B 4204 LSSF",
+        ...                     "Изображение": "http://...",
+        ...                     "Цена": "24'570.00 руб.",
+        ...                     "Количество": 3,
+        ...                     "Заказ": ,
+        ...                 },
+        ...                 ...
+        ...                 ]
         >>> create_stocks(watch_remnants, offer_ids, warehouse_id)
-        [...]
+        [{
+            "sku": 48852),
+            "warehouseId": 1234567,
+            "items": [
+                {
+                    "count": 3,
+                    "type": "FIT",
+                    "updatedAt": str(datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"),
+                }
+            ],
+        },
+        ...]
 
     Raises:
         requests.exceptions.HTTPError
@@ -224,17 +254,34 @@ def create_prices(watch_remnants, offer_ids):
     """Обновить цены для товаров.
 
     Arguments:
-        watch_remnants (dict): Словарь с данными о товарах.
+        watch_remnants (list): Список словарей с данными о товарах.
         offer_ids (list): Список имеющихся в магазине товаров.
 
     Returns:
         list: Список товаров с обновлёнными ценами.
 
     Examples:
-        >>> offer_ids = get_offer_ids(campaign_id, market_token)
-        >>> watch_remnants = download_stock()
+        >>> offer_ids = [123, 345, ...]
+        >>> watch_remnants = [{
+        ...                     "Код": 48852,
+        ...                     "Наименование товара": "B 4204 LSSF",
+        ...                     "Изображение": "http://...",
+        ...                     "Цена": "24'570.00 руб.",
+        ...                     "Количество": 3,
+        ...                     "Заказ": ,
+        ...                 },
+        ...                 ...
+        ...                 ]
         >>> create_prices(watch_remnants, offer_ids)
-        [...]
+        [{
+            id: 12345,
+            price{
+                value: 5990,
+                currencyId: "RUR",
+            }
+        },
+        ...
+        ]
     """
 
     prices = []
@@ -260,7 +307,7 @@ async def upload_prices(watch_remnants, campaign_id, market_token):
     """Загрузить новые цены товаров в магазин Yandex.Market.
 
     Arguments:
-        watch_remnants (dict): Словарь с данными о товарах.
+        watch_remnants (list): Список словарей с данными о товарах.
         campaign_id (str): Идентификатор клиента, сгенерированный для доступа к API Yandex.Market.
         market_token (str): Токен, сгенерированный для доступа к API Yandex.Market.
 
@@ -268,10 +315,26 @@ async def upload_prices(watch_remnants, campaign_id, market_token):
         list: Цены, которые были загружены.
 
     Examples:
-        >>> env = Env()
-        >>> watch_remnants = download_stock()
+        >>> watch_remnants = [{
+        ...                     "Код": 48852,
+        ...                     "Наименование товара": "B 4204 LSSF",
+        ...                     "Изображение": "http://...",
+        ...                     "Цена": "24'570.00 руб.",
+        ...                     "Количество": 3,
+        ...                     "Заказ": ,
+        ...                 },
+        ...                 ...
+        ...                 ]
         >>> upload_prices(watch_remnants, env.str("FBS_ID"), env.str("MARKET_TOKEN"))
-        [...]
+        [{
+            id: 12345,
+            price{
+                value: 5990,
+                currencyId: "RUR",
+            }
+        },
+        ...
+        ]
     """
 
     offer_ids = get_offer_ids(campaign_id, market_token)
@@ -285,7 +348,7 @@ async def upload_stocks(watch_remnants, campaign_id, market_token, warehouse_id)
     """Обновить данные товарах в магазине Yandex.Market.
 
     Arguments:
-        watch_remnants (dict): Словарь с данными о товарах.
+        watch_remnants (list): Список словарей с данными о товарах.
         campaign_id (str): Идентификатор клиента, сгенерированный для доступа к API Yandex.Market.
         market_token (str): Токен, сгенерированный для доступа к API Yandex.Market.
         warehouse_id (str): Идентификатор склада для API Yandex.Market.
@@ -296,9 +359,30 @@ async def upload_stocks(watch_remnants, campaign_id, market_token, warehouse_id)
 
     Examples:
         >>> env = Env()
-        >>> watch_remnants = download_stock()
+        >>> watch_remnants = [{
+        ...                     "Код": 48852,
+        ...                     "Наименование товара": "B 4204 LSSF",
+        ...                     "Изображение": "http://...",
+        ...                     "Цена": "24'570.00 руб.",
+        ...                     "Количество": 3,
+        ...                     "Заказ": ,
+        ...                 },
+        ...                 ...
+        ...                 ]
         >>> upload_stocks(watch_remnants, env.str("FBS_ID"), env.str("MARKET_TOKEN"))
-        [...]
+        Два списка с подобной структурой:
+        [{
+            "sku": 48852),
+            "warehouseId": 1234567,
+            "items": [
+                {
+                    "count": 3,
+                    "type": "FIT",
+                    "updatedAt": str(datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"),
+                }
+            ],
+        },
+        ...] ,
     """
 
     offer_ids = get_offer_ids(campaign_id, market_token)
