@@ -111,7 +111,7 @@ def update_price(prices, campaign_id, access_token):
         ...                 ]
         >>> update_price(some_prices, env.str("FBS_ID"), env.str("MARKET_TOKEN"))
         Return the response described here:
-        https://yandex.com/dev/market/partner/doc/dg/reference/get-campaigns-id-offer-prices.html
+        https://yandex.com/dev/market/partner/doc/dg/reference/post-campaigns-id-offer-prices-updates.html
 
     Raises:
         requests.exceptions.HTTPError
