@@ -17,7 +17,7 @@ def get_product_list(last_id, client_id, seller_token):
     Arguments:
         last_id (str): Идентификатор последнего товара, полученного в ответе API Ozon.
         client_id (str): Идентификатор клиента, сгенерированный для доступа к API Ozon.
-         (str): Токен, сгенерированный для доступа к API Ozon.
+        seller_token (str): Токен, сгенерированный для доступа к API Ozon.
 
     Returns:
         dict: Содержимое ответа API со списком товаров.
